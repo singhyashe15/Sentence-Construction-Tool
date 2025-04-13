@@ -15,7 +15,7 @@ export default function Display() {
         <img src={bulbswitcher} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mt-16">
         <div className="p-6 shadow-md rounded-lg text-center border border-gray-300 text-lg sm:text-xl">
           <div className="font-semibold">Time per Question</div>
           <div className="mt-2">30 Sec</div>
@@ -26,14 +26,11 @@ export default function Display() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-        <button className="px-6 py-2 bg-violet-400 text-white rounded hover:bg-violet-500 w-full sm:w-auto">
+      <div className="w-full flex justify-evenly gap-4 mt-8">
+        <button className="px-8 py-2 bg-violet-400 text-white rounded cursor-pointer hover:bg-blue-400">
           Back
         </button>
-        <button
-          className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full sm:w-auto"
-          onClick={handleTest}
-        >
+        <button className="px-8 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-400" onClick={handleTest}>
           Start
         </button>
       </div>

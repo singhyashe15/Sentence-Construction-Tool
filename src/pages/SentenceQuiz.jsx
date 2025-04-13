@@ -1,39 +1,75 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from '@tanstack/react-query';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 import Questions from "../components/Questions";
-export default function SentenceQuiz() {
+
+export default function Quiz() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  // Fetching the data from json file
+  const { setAnswers, setScore } = useUser();
+  const navigate = useNavigate();
+
+  // Fetching the data from JSON API
   const fetchQuestion = async () => {
     const res = await axios.get("https://json-server-api-okj6.onrender.com/api");
-    console.log(res.data.data.questions)
-    return res.status === 200 ? res.data.data.questions : []
-  }
-  // useQuery to store the data in cache
-  const { data } = useQuery({
+    return res.status === 200 ? res.data.data.questions : [];
+  };
+
+  const { data: questions, isLoading } = useQuery({
     queryKey: ["Questions"],
     queryFn: fetchQuestion,
     staleTime: Infinity
-  })
+  });
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => prev + 1);
+  // Load saved progress (if any)
+  useEffect(() => {
+    const savedIndex = localStorage.getItem("currentIndex");
+    if (savedIndex && !isNaN(savedIndex)) {
+      setCurrentIndex(parseInt(savedIndex));
+    }
+  }, []);
+
+  // Save progress on index change
+  useEffect(() => {
+    localStorage.setItem("currentIndex", currentIndex);
+  }, [currentIndex]);
+
+  // When quiz is finished, navigate to feedback
+  const handleFinish = () => {
+    navigate("/feedback");
   };
+
+  // Handle next question or finish
+  const handleNext = () => {
+    if (currentIndex === questions.length - 1) {
+      handleFinish();
+    } else {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
+  // Reset previous answers and score on mount
+  useEffect(() => {
+    setAnswers([]);
+    setScore(0);
+  }, []);
+
+  if (isLoading) return <div className="text-center mt-10">Loading Questions...</div>;
 
   return (
     <>
-      {data && data.length > 0 && currentIndex < data.length && (
+      {questions && questions.length > 0 && currentIndex < questions.length && (
         <Questions
-          question={data[currentIndex]}
+          question={questions[currentIndex]}
           setCurrentIndex={setCurrentIndex}
           currentIndex={currentIndex}
-          total={data.length}
+          total={questions.length}
           onNext={handleNext}
-          Last={currentIndex === data.length -1 ? 'true' : 'false'}
+          Last={currentIndex === questions.length - 1 ? 'true' : 'false'}
+          setAnswers={setAnswers} // Add this to store answers
         />
       )}
     </>
-
-  )
+  );
 }

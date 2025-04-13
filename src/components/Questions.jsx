@@ -1,50 +1,89 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
-const totalDuration = 30 * 1000;
+const totalDuration = 30 * 1000; // 30 seconds in milliseconds
 
-export default function Questions({ question,setCurrentIndex,currentIndex,total, onNext, Last }) {
+export default function Questions({ question, currentIndex, onNext, Last,setAnswers }) {
   const [blanks, setBlanks] = useState(["", "", "", ""]);
   const [remaining, setRemaining] = useState(totalDuration);
+  const navigate = useNavigate();
+  const { setScore } = useUser();
 
-  useEffect(() => {
-    const startTime = parseInt(localStorage.getItem("questionStartTime"));
-  const interval = setInterval(() => {
-    const elapsedMs = Date.now() - startTime;
-    const elapsedSec = Math.floor(elapsedMs / 1000);
-    
-    if (elapsedSec >= totalDuration) {
-      clearInterval(interval);
-      localStorage.removeItem("questionStartTime");
-      if (currentIndex < total - 1) {
-        setCurrentIndex((prev) => {
-          const nextIndex = prev + 1;
-          localStorage.setItem("currentIndex", nextIndex);
-          return nextIndex;
-        });
+  // maintaining score and paging
+  const handleNext = () => {
+    setAnswers((prev) => [
+      ...prev,
+      {
+        question: question.question,
+        correctAnswer: question.correctAnswer,
+        userAnswer: blanks,
       }
-    } else {
-      setRemaining(elapsedSec);
+    ]);
+    const score = blanks.reduce((acc, answer, index) => {
+      const isCorrect =
+        JSON.stringify(answer) === JSON.stringify(question?.correctAnswer[index]);
+      return acc + (isCorrect ? 1 : 0);
+    }, 0);
+    console.log(score)
+    if (score === 4) {
+      setScore((prev) => prev + 1)
     }
-  }, 1000);
+    setBlanks(["", "", "", ""]);
+    if (Last === 'true') {
+      navigate("/dashboard");
+    } else {
+      onNext()
+    }
+  }
+
+  // handling timeout
+  useEffect(() => {
+    let startTime = localStorage.getItem("questionStartTime");
+
+    if (!startTime || localStorage.getItem("currentIndex") != currentIndex) {
+      startTime = Date.now();
+      localStorage.setItem("questionStartTime", startTime);
+      localStorage.setItem("currentIndex", currentIndex);
+    }
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remainingTime = totalDuration - elapsed;
+
+      if (remainingTime <= 0) {
+        handleNext();
+        clearInterval(interval);
+        localStorage.removeItem("questionStartTime");
+
+      } else {
+        setRemaining(remainingTime);
+      }
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [currentIndex]);
 
-
-  const handleOptionClick = (words) => {
-    console.log(words)
-    // setBlanks(words);
-    // console.log(blanks)
+  // Filling the empty blank
+  const handleOptionClick = (word) => {
+    const insertBlank = [...blanks];
+    const index = insertBlank.findIndex(val => val === "");
+    if (index !== -1) {
+      insertBlank[index] = word;
+      setBlanks(insertBlank);
+    }
   };
 
+  //on Wrong fill Up 
   const handleBlankClick = (index) => {
     const updated = [...blanks];
     updated[index] = "";
     setBlanks(updated);
   };
 
+  // rendering the sentence
   const renderSentence = () => {
-    const parts = question?.question.split("_____________");
+    const parts = question?.question?.split("_____________");
     return parts?.map((part, index) => (
       <span key={index} className="mr-1">
         {part}
@@ -61,25 +100,27 @@ export default function Questions({ question,setCurrentIndex,currentIndex,total,
     ));
   };
 
-  const handleSubmit = () => {
-    console.log("oj")
-  }
   return (
     <>
-      <div className="absolute w-16 h-16 right-4 border border-blue-400  overflow-hidden rounded-full">
-        {/* Time Display */}
-        <div className={`w-full h-full flex items-center justify-center text-md font-bold ${Math.ceil(remaining / 1000) <= 5 && "text-red-500"} cursor-pointer`}>
+      <div className="absolute w-16 h-16 right-4 border border-blue-400 rounded-full overflow-hidden">
+        <div
+          className={`w-full h-full flex items-center justify-center text-md font-bold ${Math.ceil(remaining / 1000) <= 5 && "text-red-500"
+            }`}>
           {Math.ceil(remaining / 1000)}s
         </div>
       </div>
-      <div className="max-w-3xl mx-auto mt-10 p-4">
-        <p className="mb-8 text-lg">{renderSentence()}</p>
 
-        <div className="flex justify-between">
+      <div className="max-w-5xl mx-auto mt-16 p-4">
+        <p className="mb-8 text-lg">{currentIndex + 1}.{renderSentence()}</p>
+
+        <div className="grid grid-cols-2 gap-4">
           {question?.options?.map((opt, idx) => (
             <button
               key={idx}
-              className="border rounded-xl p-3 bg-white hover:bg-blue-100  shadow cursor-pointer"
+              className={`px-4 py-2 rounded border 
+              ${blanks.findIndex(item => item === opt) !== -1 ? 'hidden' : 'bg-white'}
+              hover:bg-blue-200
+            `}
               onClick={() => handleOptionClick(opt)}
             >
               {opt}
@@ -87,12 +128,14 @@ export default function Questions({ question,setCurrentIndex,currentIndex,total,
           ))}
         </div>
       </div>
-      <div >
-        <button className={`${blanks.some(val => val === null || val === "") ? "hidden" : ""} px-8 py-4 border border-blue-400 rounded-full hover:bg-blue-400 cursor-pointer`}
-          onClick={onNext}
-          onSubmit={() => Last && handleSubmit()}
+
+      <div className="mt-6 text-center">
+        <button
+          className={`${blanks.some((val) => val === null || val === "") ? "hidden" : ""
+            } px-8 py-4 border border-blue-400 rounded-full hover:bg-blue-400 cursor-pointer`}
+          onClick={() => handleNext()}
         >
-          {Last ? "Finish" : "Next"}
+          {Last === 'true' ? "Finish" : "Next"}
         </button>
       </div>
     </>
