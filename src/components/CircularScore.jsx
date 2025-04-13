@@ -36,7 +36,7 @@ const CircularScore = ({ maxPoints }) => {
           cy={radius}
         />
         <circle
-          stroke="#3b82f6"
+          stroke={point < 5 ? "#FF0000	" : "#3b82f6"}
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={`${circumference} ${circumference}`}
