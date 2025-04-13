@@ -6,9 +6,9 @@ An interactive sentence-based quiz application built with **React**, **React Rou
 
 - **User Name Input**: Start the quiz by entering your name.
 - **Timed Questions**: Each question is time-bound (default: 30 seconds).
-- **Auto Navigate to the next question when the timer ends.
+- **Navigate**: Auto navigate to the next question when the timer ends.
 - **Fill in the Blanks**: Complete sentences using the correct sequence of words.
-- **Enable the "Next" button only when all the blanks are filled.
+- Enable the "Next" button only when all the blanks are filled.
 - **Live Score Tracking**: Tracks score in real-time as users answer questions.
 - **Answer Feedback**: See what you got right/wrong with correct answers after the quiz.
 - **Dashboard**: Displays the final score with visual circular progress.
