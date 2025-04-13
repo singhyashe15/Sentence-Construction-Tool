@@ -4,6 +4,7 @@ import Display from "../pages/Display..jsx";
 import SentenceQuiz from "../pages/SentenceQuiz.jsx";
 import NotFound from "../pages/NotFound.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
+import Feedback from "../pages/Feedback.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path:'dashboard',
     element:<Dashboard/>
+  },
+  {
+    path:'feedback',
+    element:<Feedback/>
   },
   {
     path:'*',
