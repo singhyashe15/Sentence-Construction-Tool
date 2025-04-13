@@ -1,0 +1,31 @@
+import { createBrowserRouter } from "react-router-dom";
+import EnterName from "../pages/EnterName.jsx";
+import Display from "../pages/Display..jsx";
+import SentenceQuiz from "../pages/SentenceQuiz.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import Dashboard from "../components/Dashboard.jsx";
+
+const router = createBrowserRouter([
+  {
+    path:'/',
+    element:<EnterName/>
+  },
+  {
+    path:'display',
+    element:<Display/>
+  },
+  {
+    path:'quiz',
+    element:<SentenceQuiz/>
+  },
+  {
+    path:'dashboard',
+    element:<Dashboard/>
+  },
+  {
+    path:'*',
+    element:<NotFound/>
+  }
+])
+
+export default router;
