@@ -1,4 +1,4 @@
-import { FaLightbulb, FaQuestionCircle } from 'react-icons/fa'
+import bulbswitcher from '../assets/bulb-switcher.png'
 import { useNavigate } from 'react-router-dom'
 export default function Display() {
 
@@ -7,14 +7,13 @@ export default function Display() {
     navigate('/quiz')
   }
   return (
-    <div className="min-h-screen p-4 flex flex-col items-center justify-center overflow-hidden">
-      <div className="w-[90%] md:w-[70%] lg:w-[30%] text-center">
-        <div className="relative w-12 h-12 ">
-          <FaLightbulb size={80} className="absolute top-0 left-0 w-full h-full text-yellow-500" />
-          <FaQuestionCircle className="absolute top-2 left-2 w-6 h-6 text-blue-950 " />
+    <div className="max-w-3xl mx-auto p-4 flex flex-col items-center justify-center overflow-hidden">
+      {/* <div className="w-[90%] md:w-[70%] lg:w-[30%] text-center"> */}
+        <div className= "w-20 h-20 " style={{ backgroundColor: "#FFD700", padding: "10px", borderRadius: "50%" }}>
+         <img src={bulbswitcher}/>
         </div>
 
-        <div className='flex flex-col md:flex-row justify-between mt-16'>
+        <div className='grid grid-cols-2 gap-4 mt-16'>
           <div className='p-8 shadow-sm rounded-lg text-2xl text-center border border-gray-300 '>Time per Questions
             <div>30Sec</div>
           </div>
@@ -32,7 +31,7 @@ export default function Display() {
             Start
           </button>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   )
 }
