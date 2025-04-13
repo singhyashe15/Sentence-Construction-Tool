@@ -5,8 +5,8 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   // Initialize from localStorage (if available)
   const [name, setName] = useState(() => localStorage.getItem("userName") || "");
-  const [point, setPoint] = useState(() => parseInt(localStorage.getItem("userPoint")) || 10);
-
+  const [score, setScore] = useState(() => parseInt(localStorage.getItem("userPoint")) || 0);
+  const [answers, setAnswers] = useState([]); // Store answers
   // Save name to localStorage on change
   useEffect(() => {
     localStorage.setItem("userName", name);
@@ -14,11 +14,12 @@ export const UserProvider = ({ children }) => {
 
   // Save point to localStorage on change
   useEffect(() => {
-    localStorage.setItem("userPoint", point.toString());
-  }, [point]);
+    localStorage.setItem("userPoint", score.toString());
+  }, [score]);
+
 
   return (
-    <UserContext.Provider value={{ name, setName, point, setPoint }}>
+    <UserContext.Provider value={{ name, setName, score, setScore, answers, setAnswers }}>
       {children}
     </UserContext.Provider>
   );
