@@ -3,7 +3,7 @@ import EnterName from "../pages/EnterName.jsx";
 import Display from "../pages/Display..jsx";
 import SentenceQuiz from "../pages/SentenceQuiz.jsx";
 import NotFound from "../pages/NotFound.jsx";
-import Dashboard from "../components/Dashboard.jsx";
+import Dashboard from "../pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
