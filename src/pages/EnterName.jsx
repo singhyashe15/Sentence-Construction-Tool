@@ -11,7 +11,7 @@ const EnterName = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (name.trim() && name !== null) {
-      navigate("/display"); // Navigate to sentence quiz
+      navigate("/display",{replace:true}); // Navigate to sentence quiz
     } else {
       toast.error("Enter your name first");
     }

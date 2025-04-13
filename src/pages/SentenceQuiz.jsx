@@ -15,7 +15,7 @@ export default function Quiz() {
     const res = await axios.get("https://json-server-api-okj6.onrender.com/api");
     return res.status === 200 ? res.data.data.questions : [];
   };
-
+  // To store the data in cache
   const { data: questions, isLoading } = useQuery({
     queryKey: ["Questions"],
     queryFn: fetchQuestion,
@@ -35,6 +35,20 @@ export default function Quiz() {
     localStorage.setItem("currentIndex", currentIndex);
   }, [currentIndex]);
 
+  // Avoid back button
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ""; // Required for Chrome
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+  
   // When quiz is finished, navigate to feedback
   const handleFinish = () => {
     navigate("/feedback");
