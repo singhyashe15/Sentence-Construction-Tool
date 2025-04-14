@@ -1,6 +1,6 @@
 # 🧠 Sentence Construction Tool 
 
-An interactive sentence-based quiz application built with **React**, **React Router**, **Chakra UI/TailwindCSS**, and **Context API** for state management. This app helps users practice sentence completion with a timed, multi-question interface and provides detailed feedback after completion.
+An interactive sentence-based quiz application built with **React**, **React Router**, **TailwindCSS**, and **Context API** for state management. This app helps users practice sentence completion with a timed, multi-question interface and provides detailed feedback after completion.
 
 ## 🚀 Features
 
